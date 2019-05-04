@@ -76,3 +76,14 @@ def rf_clean(test_data):
 
     return(X_pred)
 
+def xls_clean(df):
+    #drop ID and labels 
+    df = df.drop('ID')
+    #set needed arrays  
+    names = df['X24']
+    last = df['X25']
+    email = df['X26']
+    city = df['X27']
+    #drop the previously mentioned columns
+    X_pred = df.drop(['X24','X25','X26','X27'] , axis=1)
+    return(names,last,email,city , df)

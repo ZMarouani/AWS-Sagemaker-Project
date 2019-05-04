@@ -5,10 +5,10 @@ import numpy as np
 import pandas
 import pickle
  
-from cleaning import clean
-from cleaning import rf_clean 
+from cleaning import clean , rf_clean , xls_clean
 from getResults import  getResults
 from getNames import getNames , getCity 
+from api import create_client , invoke_endpoint
 
 from sklearn.preprocessing import StandardScaler
 
@@ -62,6 +62,49 @@ def rf_xls_results():
             'results' : rf_xls_results
         })
 
+#Invoke endpoint for XGB prediction with SAGE
+@app.route('/xgb_xls_results', methods = ['POST' , 'GET'])
+def xgb_xls_results():
+    global xgb_xls_results 
+    if request.method == 'POST':
+        file = request.files['file']
+        df = pandas.read_excel(file)
+        #does this function changes DF ?
+        #(names,last,email,city,df) = xls_clean(df)
+        
+        #drop ID and labels 
+        df = df.drop('ID')
+        #set needed arrays  
+        names = df['X24']
+        last = df['X25']
+        email = df['X26']
+        city = df['X27']
+        #drop the previously mentioned columns
+        X_pred = df.drop(['X24','X25','X26','X27'] , axis=1)
+        
+        #time to invoke the sage endpoint
+        client = create_client()
+        ynew = invoke_endpoint( client , X_pred )
+        print('model.predict' , ynew)
+
+        #call getNames function or module : Returns json data for  RADAR charts
+        # create var results or data for getResults()
+        # A for Array ex: array names 
+        (anames,alast,aemail,acity) = getNames(ynew ,names ,last , email , city)
+        #we will decide if we want to show them in a table or not 
+
+        xgb_xls_results = getCity(ynew , acity)
+
+
+        return jsonify({
+		'results' : xgb_xls_results
+        
+        		})
+    else:
+        print('GET the problem')
+        return jsonify({
+            'results' : xgb_xls_results
+        })
 
 
 
