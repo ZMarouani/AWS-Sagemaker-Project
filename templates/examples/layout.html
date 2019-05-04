@@ -18,6 +18,22 @@
   <link href="../static/assets/css/black-dashboard.css?v=1.0.0" rel="stylesheet" />
   <!-- CSS Just for demo purpose, don't include it in your project -->
   <link href="../static/assets/demo/demo.css" rel="stylesheet" />
+
+<script src="http://code.jquery.com/jquery-3.3.1.min.js" ></script>
+<!-- simple upload script -->
+<script type="text/javascript" src="http://simpleupload.michaelcbrook.com/js/simpleUpload/simpleUpload.js"></script>
+
+<script src="https://www.chartjs.org/dist/2.8.0/Chart.min.js"></script>
+  <script src="https://www.chartjs.org/samples/latest/utils.js"></script>
+  <style>
+  canvas{
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+  }
+  </style>
+
+  <!--chartjs !!!!!!!!!!!!!!!!!!!!!! -->
 </head>
 
 <body class="">
@@ -37,7 +53,7 @@
         </div>
         <ul class="nav">
           <li class="active ">
-            <a href="/dashboard">
+            <a href="/">
               <i class="tim-icons icon-chart-pie-36"></i>
               <p>Term deposit prediction</p>
             </a>
@@ -46,6 +62,18 @@
             <a href="/adult_pred">
               <i class="tim-icons icon-atom"></i>
               <p>Salary classification</p>
+            </a>
+          </li>
+          <li>
+            <a href="/credit_risk">
+              <i class="tim-icons icon-atom"></i>
+              <p>Credit Risk</p>
+            </a>
+          </li>
+          <li>
+            <a href="/Default_payment">
+              <i class="tim-icons icon-atom"></i>
+              <p>Default on cc payment</p>
             </a>
           </li>
           
@@ -145,15 +173,49 @@
         </div>
       </div>
       <!-- End Navbar -->
-      <div class="content">
-      	<div class="row">
+      <div class="content"> 
+        <div class="row">
           <div class="col-12">
-          			<h1>{{prediction}}</h1>
+              {% block content %}
+              {% endblock %}
+
+      </div>      
+</div>
+      </div>
+
+
+
+
+
+      <footer class="footer">
+        <div class="container-fluid">
+          <ul class="nav">
+            <li class="nav-item">
+              <a href="javascript:void(0)" class="nav-link">
+                Creative Tim
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="javascript:void(0)" class="nav-link">
+                About Us
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="javascript:void(0)" class="nav-link">
+                Blog
+              </a>
+            </li>
+          </ul>
+          <div class="copyright">
+            ©
+            <script>
+              document.write(new Date().getFullYear())
+            </script> made with <i class="tim-icons icon-heart-2"></i> by
+            <a href="javascript:void(0)" target="_blank">Creative Tim</a> for a better web.
           </div>
-      </div>
-
-
-      </div>
+        </div>
+      </footer>
+    </div>
   </div>
   <div class="fixed-plugin">
     <div class="dropdown show-dropdown">
@@ -196,7 +258,10 @@
     </div>
   </div>
   <!--   Core JS Files   -->
-  <script src="../static/assets/js/core/jquery.min.js"></script>
+
+
+  <!--     <script src="../static/assets/js/core/jquery.min.js"></script>  -->
+
   <script src="../static/assets/js/core/popper.min.js"></script>
   <script src="../static/assets/js/core/bootstrap.min.js"></script>
   <script src="../static/assets/js/plugins/perfect-scrollbar.jquery.min.js"></script>
@@ -322,13 +387,128 @@
       });
     });
   </script>
-  <script>
-    $(document).ready(function() {
-      // Javascript method's body can be found in assets/js/demos.js
-      demo.initDashboardPageCharts();
 
+
+<!--The script for the credit_risk Radar chart -->
+<script>
+		var randomScalingFactor = function() {
+			return Math.round(Math.random() * 100);
+		};
+
+		var color = Chart.helpers.color;
+		var config = {
+			type: 'radar',
+			data: {
+				labels: ['California', 'Chicago', 'San Francisco','New York',  'Washington'],
+				datasets: []
+			},
+			options: {
+				legend: {
+					position: 'top',
+				},
+				title: {
+					display: true,
+					text: 'Chart.js Radar Chart'
+				},
+				scale: {
+					ticks: {
+						beginAtZero: true
+					}
+				}
+			}
+		};
+
+		window.onload = function() {
+			window.myRadar = new Chart(document.getElementById('canvas'), config);
+		};
+
+		document.getElementById('randomizeData').addEventListener('click', function() {
+			config.data.datasets.forEach(function(dataset) {
+				dataset.data = dataset.data.map(function() {
+					return randomScalingFactor();
+				});
+			});
+
+			window.myRadar.update();
+		});
+
+		var colorNames = Object.keys(window.chartColors);
+		document.getElementById('addDataset').addEventListener('click', function() {
+			var colorName = colorNames[config.data.datasets.length % colorNames.length];
+			var newColor = window.chartColors[colorName];
+
+			var newDataset = {
+				label: 'Dataset ' + config.data.datasets.length,
+				borderColor: newColor,
+				backgroundColor: color(newColor).alpha(0.2).rgbString(),
+				pointBackgroundColor: newColor,
+				data: [],
+			};
+
+			for (var index = 0; index < config.data.labels.length; ++index) {
+				newDataset.data.push(randomScalingFactor());
+			}
+
+			config.data.datasets.push(newDataset);
+			window.myRadar.update();
+		});
+
+		document.getElementById('addData').addEventListener('click', function() {
+			if (config.data.datasets.length > 0) {
+				config.data.labels.push('dataset #' + config.data.labels.length);
+
+				config.data.datasets.forEach(function(dataset) {
+					dataset.data.push(randomScalingFactor());
+				});
+
+				window.myRadar.update();
+			}
+		});
+
+		document.getElementById('removeDataset').addEventListener('click', function() {
+			config.data.datasets.splice(0, 1);
+			window.myRadar.update();
+		});
+
+		document.getElementById('removeData').addEventListener('click', function() {
+			config.data.labels.pop(); // remove the label first
+
+			config.data.datasets.forEach(function(dataset) {
+				dataset.data.pop();
+			});
+
+			window.myRadar.update();
+		});
+	</script>
+
+<!-- add Radar prediciton chart-->
+<script>
+function add_rf_xls_chart() {
+  //the file ajax upload part 
+$("#myFile_xls").simpleUpload("/rf_xls_results" , "POST")
+    var updatedData = $.get('/rf_xls_results') ;
+    console.log('the rf_xls received data ' , updatedData)
+
+    updatedData.done(function(rf_xls_results){
+      var colorName = colorNames[config.data.datasets.length % colorNames.length];
+      var newColor = window.chartColors[colorName];
+      var newDataset = {
+        label: 'Dataset',
+        backgroundColor: color(newColor).alpha(0.2).rgbString(),
+        borderColor: newColor,
+        pointBackgroundColor: newColor,
+        data: rf_xls_results.results
+                                
+                      };
+       
+        
+        config.data.datasets.push(newDataset);
+      window.myRadar.update();
     });
-  </script>
+         }
+$("#rf_xls_predict").on('click' , add_rf_xls_chart);
+</script>
+
 </body>
 
 </html>

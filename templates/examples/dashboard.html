@@ -55,13 +55,25 @@
           <li class="active ">
             <a href="/">
               <i class="tim-icons icon-chart-pie-36"></i>
-              <p>Fraud detection</p>
+              <p>Term deposit prediction</p>
             </a>
           </li>
           <li>
             <a href="/adult_pred">
               <i class="tim-icons icon-atom"></i>
               <p>Salary classification</p>
+            </a>
+          </li>
+          <li>
+            <a href="/credit_risk">
+              <i class="tim-icons icon-atom"></i>
+              <p>Credit Risk</p>
+            </a>
+          </li>
+          <li>
+            <a href="/Default_payment">
+              <i class="tim-icons icon-atom"></i>
+              <p>Default on cc payment</p>
             </a>
           </li>
           
@@ -161,11 +173,11 @@
         </div>
       </div>
       <!-- End Navbar -->
-      <div class="content">
+      <div class="content"> 
         <div class="row">
           <div class="col-12">
             
-<!--new chart -->
+<!--new chart ------------------------------------------------------------>
 
 <div style="width:75%;">
     <canvas id="canvas"></canvas>
@@ -182,7 +194,7 @@
   <input type="file" id="myFile" name="file" class="btn btn-fill btn-primary">
   <button type="submit" id="predict" class="btn btn-fill btn-primary" >Neural Networks</button>
   <button type="submit" id="rf_predict" class="btn btn-fill btn-primary" >Random Forest</button>
-  <button type="submit" id="xgb_predict" class="btn btn-fill btn-primary" >XGBoost</button>
+  <button type="submit" id="svm_predict" class="btn btn-fill btn-primary" >lineair SVM</button>
 
 
 
@@ -485,6 +497,11 @@
           </div>
         </div>
       </div>
+
+
+
+
+
       <footer class="footer">
         <div class="container-fluid">
           <ul class="nav">
@@ -748,14 +765,14 @@ function add_rf_chart() {
             var updatedData = $.get('/rf_results') ;
             console.log('the rf received data ' , updatedData)
 
-            updatedData.done(function(results){
+            updatedData.done(function(rf_results){
               var colorName = colorNames[config.data.datasets.length % colorNames.length];
               var newColor = window.chartColors[colorName];
               var newDataset = {
                 label: 'Random Forest',
                 backgroundColor: newColor,
                 borderColor: newColor,
-                data: results.results,
+                data: rf_results.results,
                 fill: false
                                 };
                
@@ -766,22 +783,22 @@ function add_rf_chart() {
                  }
 $("#rf_predict").on('click' , add_rf_chart);
 
-/*Script for XGBoost predictions button */
+/*Script for SVM predictions button */
 
-function add_xgb_chart() {
+function add_svm_chart() {
           //the file ajax upload part 
-        $("#myFile").simpleUpload("/xgb_results" , "POST")
-            var updatedData = $.get('/xgb_results') ;
-            console.log('the xgb received data ' , updatedData)
+        $("#myFile").simpleUpload("/svm_results" , "POST")
+            var updatedData = $.get('/svm_results') ;
+            console.log('the svm received data ' , updatedData)
 
-            updatedData.done(function(results){
+            updatedData.done(function(svm_results){
               var colorName = colorNames[config.data.datasets.length % colorNames.length];
               var newColor = window.chartColors[colorName];
               var newDataset = {
-                label: 'XGBoost',
+                label: 'SVM',
                 backgroundColor: newColor,
                 borderColor: newColor,
-                data: results.results,
+                data: svm_results.results,
                 fill: false
                                 };
                
@@ -790,7 +807,7 @@ function add_xgb_chart() {
               window.myLine.update();
             });
                  }
-$("#xgb_predict").on('click' , add_xgb_chart);
+$("#svm_predict").on('click' , add_svm_chart);
     
 
 

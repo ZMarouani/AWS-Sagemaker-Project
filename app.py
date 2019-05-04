@@ -8,6 +8,7 @@ import pickle
 from cleaning import clean
 from cleaning import rf_clean 
 from getResults import  getResults
+from getNames import getNames , getCity 
 
 from sklearn.preprocessing import StandardScaler
 
@@ -15,6 +16,59 @@ app = Flask(__name__)
 
 #do we need an upload folder ? // app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 TEMPLATES_AUTO_RELOAD = True
+
+@app.route('/credit_risk')
+def test(name=None):
+	return render_template('examples/credit_risk.html', name=name)
+
+#submit file to Random Forest prediction
+@app.route('/rf_xls_results', methods = ['POST' , 'GET'])
+def rf_xls_results():
+    global rf_xls_results 
+    if request.method == 'POST':
+        file = request.files['file']
+        df = pandas.read_excel(file)
+        
+        #drop ID and labels 
+        df = df.drop('ID')
+        #set names  
+        names = df['X24']
+        last = df['X25']
+        email = df['X26']
+        city = df['X27']
+
+        #drop the mentioned columns
+        X_pred = df.drop(['X24','X25','X26','X27'] , axis=1)
+        loaded_model = pickle.load(open("rf_xls_model.pkl", "rb"))
+        ynew = loaded_model.predict(X_pred)
+        print('model.predict' , ynew)
+
+        #call getResults function or module : Returns json data for charts
+        # create var results or data for getResults()
+        # A for Array ex: array names 
+        (anames,alast,aemail,acity) = getNames(ynew ,names ,last , email , city)
+        #we will decide if we want to show them in a table or not 
+
+        rf_xls_results = getCity(ynew , acity)
+
+
+        return jsonify({
+		'results' : rf_xls_results
+        
+        		})
+    else:
+        print('GET the problem')
+        return jsonify({
+            'results' : rf_xls_results
+        })
+
+
+
+
+
+
+
+
 
 
 @app.route('/')
@@ -88,7 +142,7 @@ def nn_results():
 #submit file to Random Forest prediction
 @app.route('/rf_results', methods = ['POST' , 'GET'])
 def rf_results():
-    global results 
+    global rf_results 
     if request.method == 'POST':
         file = request.files['file']
         df = pandas.read_csv(file)
@@ -101,6 +155,43 @@ def rf_results():
         print('step 1 ')
         loaded_model = pickle.load(open("rf_model.pkl", "rb"))
         print('step 2 ')
+        ynew = loaded_model.predict(X_pred)
+       
+        print('model.predict' , ynew)
+        #call getResults function or module : Returns json data for charts
+        # create var results or data for getResults()
+        print('step 3 ')
+        rf_results = getResults(ynew , months)
+        print ("results : " , rf_results)
+
+
+        #df = pandas.DataFrame(nn_results)
+        #dlist = df.values.list() 
+        #return render_template("examples/exp.html", data=results )
+        return jsonify({
+		'results' : rf_results
+        
+        		})
+    else:
+        print('GET the problem')
+        return jsonify({
+            'results' : rf_results
+        })
+
+#submit file to SVM lineair model
+@app.route('/svm_results', methods = ['POST' , 'GET'])
+def svm_results():
+    global results 
+    if request.method == 'POST':
+        file = request.files['file']
+        df = pandas.read_csv(file)
+        #set months and clean the file 
+        months = df['month']
+
+        #clean_df =  clean(df).values
+        #maybe we should use the standardScaler ?
+        X_pred =  rf_clean(df)
+        loaded_model = pickle.load(open("svm_model.pkl", "rb"))
         ynew = loaded_model.predict(X_pred)
        
         print('probably the error place ynew:' , ynew)
@@ -123,6 +214,8 @@ def rf_results():
         return jsonify({
             'results' : results
         })
+
+
 
 #submit file to XGBoost prediction
 @app.route('/xgb_results', methods = ['POST' , 'GET'])
