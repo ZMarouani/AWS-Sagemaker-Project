@@ -10,12 +10,20 @@ from getResults import  getResults
 from getNames import getNames , getCity 
 from api import create_client , invoke_endpoint
 
+#from insertTable import insertTable
+
 from sklearn.preprocessing import StandardScaler
 
 app = Flask(__name__)
 
 #do we need an upload folder ? // app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 TEMPLATES_AUTO_RELOAD = True
+
+#an attempt to write the html with python , the problem is that its not dynamic neither would be errased 
+#@app.route('/data_table')
+#def dataTable(name=None):
+#    return render_template('examples/dataTable.html', name=name)
+
 
 @app.route('/credit_risk')
 def test(name=None):

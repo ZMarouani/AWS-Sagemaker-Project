@@ -18,7 +18,7 @@ def getNames (ynew , names , last , email , city) :
     value_email = []
     value_city = []
 
-    for i in range(len(ynew)):
+    for i in range(1,len(ynew)):
         if(ynew[i]==1):
             value_name.append(names[i])
             value_last.append(last[i])
