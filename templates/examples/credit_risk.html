@@ -8,8 +8,11 @@
                         <canvas id="canvas"></canvas>
                     </div>
                     <input type="file" id="myFile_xls" name="file" class="btn btn-fill btn-primary">
-                    <button type="submit" id="rf_xls_predict" class="btn btn-fill btn-primary" >Predict_RF</button>
-                    <button type="submit" id="xgb_xls_predict" class="btn btn-fill btn-primary" >Predict_XGB</button>
+                    <button type="submit" id="rf_xls_predict" class="btn btn-fill btn-primary" >Random Forest</button>
+                    <button type="submit" id="xgb_xls_predict" class="btn btn-fill btn-primary" >XGB</button>
+                    <button type="submit" id="ll_xls_predict" class="btn btn-fill btn-primary" >Linear_Learner</button>
+                    <button type="submit" id="fm_xls_predict" class="btn btn-fill btn-primary" >Fact Machine</button>
+
 
                     <button id="randomizeData">Randomize Data</button>
                     <button id="addDataset">Add Dataset</button>
@@ -21,16 +24,8 @@
     </div>
     <div class="row">
             <div class="col-12">
-                {% block insertTable %}
-                {% endblock %}
   
         </div>      
   </div>
-
-    
-
-    
-
-
 {%endblock %}
 

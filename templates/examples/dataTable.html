@@ -1,0 +1,43 @@
+{% extends "examples/layout.html" %}
+{% block content%}
+
+<div class="row">
+        <div class="col-12">
+<input type="file" id="myFile_default" name="file" class="btn btn-fill btn-primary">
+<button type="submit" id="default_predict" class="btn btn-fill btn-primary" >Predict</button>
+    </div>
+</div>
+
+
+<div class="bootstrap-table">
+    <div class="fixed-table-toolbar"></div>
+    
+    <div class="fixed-table-container" style="padding-bottom: 0px;">
+    <div class="fixed-table-header" style="display: none;"><table></table></div>
+    <div class="fixed-table-body">
+    <div class="fixed-table-loading table table-bordered table-hover" style="top: 51px;">
+    <span class="loading-wrap">
+    <span class="loading-text">Loading, please wait</span>
+    <span class="animation-wrap"><span class="animation-dot"></span></span>
+    </span>
+    </div>
+    <table id="table" class="table table-bordered table-hover">
+<thead><tr>
+    <th style="" data-field="id"><div class="th-inner ">Account ID</div><div class="fht-cell"></div></th><th style="" data-field="name"><div class="th-inner ">Full name</div><div class="fht-cell"></div></th><th style="" data-field="price"><div class="th-inner ">Phone</div><div class="fht-cell"></div></th></tr></thead>
+<tbody>
+    <tr data-index="0"><td style="">0</td>
+        <td style="">Item 0</td>
+        <td style="">$0</td></tr><tr data-index="1"><td style="">1</td><td style="">Item 1</td><td style="">$1</td></tr><tr data-index="2"><td style="">2</td><td style="">Item 2</td><td style="">$2</td></tr><tr data-index="3"><td style="">3</td><td style="">Item 3</td><td style="">$3</td></tr><tr data-index="4"><td style="">4</td><td style="">Item 4</td><td style="">$4</td></tr><tr data-index="5"><td style="">5</td><td style="">Item 5</td><td style="">$5</td>
+        </tr></tbody></table></div>
+    <div class="fixed-table-footer" style="display: none;"><table>
+        <thead>
+            <tr>
+        </tr>
+    </thead>
+    </table>
+</div>
+    </div>
+    <div class="fixed-table-pagination" style="display: none;"></div>
+    </div>
+
+    {% endblock%}

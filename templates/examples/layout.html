@@ -19,6 +19,10 @@
   <!-- CSS Just for demo purpose, don't include it in your project -->
   <link href="../static/assets/demo/demo.css" rel="stylesheet" />
 
+<!--Data tablr CDN links-->
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.14.2/dist/bootstrap-table.min.css">
+<script src="https://unpkg.com/bootstrap-table@1.14.2/dist/bootstrap-table.min.js"></script>
+
 <script src="http://code.jquery.com/jquery-3.3.1.min.js" ></script>
 <!-- simple upload script -->
 <script type="text/javascript" src="http://simpleupload.michaelcbrook.com/js/simpleUpload/simpleUpload.js"></script>
@@ -520,7 +524,7 @@ $("#myFile_xls").simpleUpload("/xgb_xls_results" , "POST")
       var colorName = colorNames[config.data.datasets.length % colorNames.length];
       var newColor = window.chartColors[colorName];
       var newDataset = {
-        label: 'Sage Dataset',
+        label: 'Sage XGB',
         backgroundColor: color(newColor).alpha(0.2).rgbString(),
         borderColor: newColor,
         pointBackgroundColor: newColor,
@@ -534,6 +538,54 @@ $("#myFile_xls").simpleUpload("/xgb_xls_results" , "POST")
     });
          }
 $("#xgb_xls_predict").on('click' , add_xgb_xls_chart);
+
+
+
+function add_ll_xls_chart() {
+ //the file ajax upload part 
+$("#myFile_xls").simpleUpload("/ll_xls_results" , "POST")
+    var updatedData = $.get('/ll_xls_results') ;
+    updatedData.done(function(ll_xls_results){
+      var colorName = colorNames[config.data.datasets.length % colorNames.length];
+      var newColor = window.chartColors[colorName];
+      var newDataset = {
+        label: 'Sage linear learner',
+        backgroundColor: color(newColor).alpha(0.2).rgbString(),
+        borderColor: newColor,
+        pointBackgroundColor: newColor,
+        data: ll_xls_results.results
+                                
+                      };
+       
+        
+        config.data.datasets.push(newDataset);
+      window.myRadar.update();
+    });
+         }
+$("#ll_xls_predict").on('click' , add_ll_xls_chart);
+
+function add_fm_xls_chart() {
+ //the file ajax upload part 
+$("#myFile_xls").simpleUpload("/fm_xls_results" , "POST")
+    var updatedData = $.get('/fm_xls_results') ;
+    updatedData.done(function(fm_xls_results){
+      var colorName = colorNames[config.data.datasets.length % colorNames.length];
+      var newColor = window.chartColors[colorName];
+      var newDataset = {
+        label: 'Sage Fact Machine',
+        backgroundColor: color(newColor).alpha(0.2).rgbString(),
+        borderColor: newColor,
+        pointBackgroundColor: newColor,
+        data: fm_xls_results.results
+                                
+                      };
+       
+        
+        config.data.datasets.push(newDataset);
+      window.myRadar.update();
+    });
+         }
+$("#fm_xls_predict").on('click' , add_fm_xls_chart);
 </script>
 
 </body>

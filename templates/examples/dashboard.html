@@ -195,6 +195,8 @@
   <button type="submit" id="predict" class="btn btn-fill btn-primary" >Neural Networks</button>
   <button type="submit" id="rf_predict" class="btn btn-fill btn-primary" >Random Forest</button>
   <button type="submit" id="svm_predict" class="btn btn-fill btn-primary" >lineair SVM</button>
+  <button type="submit" id="lr_predict" class="btn btn-fill btn-primary" >logistic regression</button>
+  <button type="submit" id="all_predict" class="btn btn-fill btn-primary" >All</button>
 
 
 
@@ -729,6 +731,18 @@ console.log(updatedData)
     });
 }
 $("#predict").on('click' , updateChart);*/
+/*Script for predict all algorithms at the same time */
+function add_all_chart() {
+          //the file ajax upload part 
+        add_nn_chart();
+        add_rf_chart();
+        add_lr_chart();
+        add_svm_chart();
+          
+                }
+$("#all_predict").on('click' , add_all_chart);
+
+
 
 /*Script for Neural Networks prediction button */
 
@@ -809,7 +823,31 @@ function add_svm_chart() {
                  }
 $("#svm_predict").on('click' , add_svm_chart);
     
+/*Script for logistic regression predictions button */
 
+function add_lr_chart() {
+          //the file ajax upload part 
+        $("#myFile").simpleUpload("/lr_results" , "POST")
+            var updatedData = $.get('/lr_results') ;
+            console.log('the lr received data ' , updatedData)
+
+            updatedData.done(function(lr_results){
+              var colorName = colorNames[config.data.datasets.length % colorNames.length];
+              var newColor = window.chartColors[colorName];
+              var newDataset = {
+                label: 'Logistic regression',
+                backgroundColor: newColor,
+                borderColor: newColor,
+                data: lr_results.results,
+                fill: false
+                                };
+               
+                
+                config.data.datasets.push(newDataset);
+              window.myLine.update();
+            });
+                 }
+$("#lr_predict").on('click' , add_lr_chart);
 
 
 
