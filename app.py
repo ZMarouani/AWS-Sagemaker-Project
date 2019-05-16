@@ -29,6 +29,33 @@ def dataTable(name=None):
 def test(name=None):
 	return render_template('examples/credit_risk.html', name=name)
 
+@app.route('/generic_model')
+def generic_model(name=None):
+	return render_template('examples/generic_model.html', name=name)
+@app.route('/accept_generic_model')
+def accept_generic_model(name=None):
+    global results 
+    if request.method == 'POST':
+        file = request.files['file']
+        df = pandas.read_csv(file)
+        #generic cleaning 
+        clean_df =  clean(df).values
+        #Build neural network // parameters ??
+        nn = build_nn()
+        #use predict_classes not predict
+
+        print ("results : " , results)
+        return jsonify({
+		'results' : results
+        
+        		})
+    else:
+        print('GET the problem')
+        return jsonify({
+            'results' : results
+        }) 
+
+
 
 @app.route('/')
 def hello_world(name=None):

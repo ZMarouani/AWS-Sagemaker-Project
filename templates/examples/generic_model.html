@@ -1,0 +1,23 @@
+{% extends "examples/layout.html" %}
+{% block content %}
+
+<div class="row">
+        <div class="col-12">
+
+            
+            <div>
+                        <canvas id="canvas"></canvas>
+            </div>
+
+                    <input type="file" id="training_file" name="training_file" class="btn btn-fill btn-primary">
+                    <input type="file" id="test_file" name="Prediction_file" class="btn btn-fill btn-primary">
+
+                    <button type="submit" id="predict_generic" class="btn btn-fill btn-primary" >Predict</button>
+                    
+        </div>
+                    
+</div>
+                    
+
+
+{% endblock %}
