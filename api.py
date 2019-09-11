@@ -6,8 +6,8 @@ import json
 
 def create_client():
     return(boto3.client('sagemaker-runtime',
-    aws_access_key_id= 'AKIAYDH4EJCQ6KWMEBGE' ,
-    aws_secret_access_key= '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' ,
+    aws_access_key_id= ' ' ,
+    aws_secret_access_key= ' ' ,
     region_name='eu-west-1')
     )
 
